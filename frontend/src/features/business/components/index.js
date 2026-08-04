@@ -8,3 +8,7 @@ export { default as BusinessRow } from "./BusinessRow";
 // NEW
 export { default as BusinessForm } from "./BusinessForm";
 export { default as BusinessLogoUpload } from "./BusinessLogoUpload";
+
+export { default as BusinessProfileCard } from "./BusinessProfileCard";
+export { default as BusinessInformation } from "./BusinessInformation";
+export { default as BusinessStatistics } from "./BusinessStatistics";

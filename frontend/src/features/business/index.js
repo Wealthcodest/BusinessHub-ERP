@@ -7,3 +7,5 @@ export { default as BusinessEditPage } from "./pages/BusinessEditPage";
 export { default as useBusinesses } from "./hooks/useBusinesses";
 
 export { businessService } from "./services/businessService";
+
+export { default as BusinessDetailsPage } from "./pages/BusinessDetailsPage";
