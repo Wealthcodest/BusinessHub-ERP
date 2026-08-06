@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
+import { useToast } from "@/components/ui";
 
 import { BusinessForm } from "../components";
 import { businessService } from "../services/businessService";
 
 export default function BusinessCreatePage() {
   const navigate = useNavigate();
+  const toast = useToast();
 
   const [loading, setLoading] = useState(false);
 
@@ -18,13 +20,13 @@ export default function BusinessCreatePage() {
 
       await businessService.create(data);
 
-      alert("Business created successfully.");
+      toast.success("Business created successfully.");
 
       navigate("/businesses");
     } catch (error) {
       console.error(error);
 
-      alert("Unable to create business.");
+      toast.error("Unable to create business.");
     } finally {
       setLoading(false);
     }

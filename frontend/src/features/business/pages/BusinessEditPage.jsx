@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import { useToast } from "@/components/ui";
 
 import { BusinessForm } from "../components";
 import { businessService } from "../services/businessService";
@@ -10,6 +11,7 @@ import { businessService } from "../services/businessService";
 export default function BusinessEditPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const toast = useToast();
 
   const [business, setBusiness] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -24,7 +26,7 @@ export default function BusinessEditPage() {
       const data = await businessService.getById(id);
 
       if (!data) {
-        alert("Business not found.");
+        toast.warning("Business not found.");
         navigate("/businesses");
         return;
       }
@@ -32,7 +34,7 @@ export default function BusinessEditPage() {
       setBusiness(data);
     } catch (error) {
       console.error(error);
-      alert("Unable to load business.");
+      toast.error("Unable to load business.");
       navigate("/businesses");
     } finally {
       setLoading(false);
@@ -45,12 +47,12 @@ export default function BusinessEditPage() {
 
       await businessService.update(id, values);
 
-      alert("Business updated successfully.");
+      toast.success("Business updated successfully.");
 
       navigate("/businesses");
     } catch (error) {
       console.error(error);
-      alert("Unable to update business.");
+      toast.error("Unable to update business.");
     } finally {
       setSaving(false);
     }

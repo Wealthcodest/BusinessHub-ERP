@@ -13,3 +13,4 @@ export {
 } from "./Modal";
 
 export { default as ConfirmDialog } from "./ConfirmDialog";
+export { Toast, ToastContainer, ToastProvider, useToast } from "./Toast";

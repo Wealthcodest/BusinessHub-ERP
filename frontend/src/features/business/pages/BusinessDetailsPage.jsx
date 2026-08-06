@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import Button from "@/components/ui/Button";
+import { useToast } from "@/components/ui";
 
 import {
   BusinessProfileCard,
@@ -17,6 +18,7 @@ import { businessService } from "../services/businessService";
 export default function BusinessDetailsPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const toast = useToast();
 
   const [business, setBusiness] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -30,7 +32,7 @@ export default function BusinessDetailsPage() {
       const data = await businessService.getById(id);
 
       if (!data) {
-        alert("Business not found.");
+        toast.warning("Business not found.");
         navigate("/businesses");
         return;
       }
@@ -38,7 +40,7 @@ export default function BusinessDetailsPage() {
       setBusiness(data);
     } catch (error) {
       console.error(error);
-      alert("Unable to load business.");
+      toast.error("Unable to load business.");
       navigate("/businesses");
     } finally {
       setLoading(false);

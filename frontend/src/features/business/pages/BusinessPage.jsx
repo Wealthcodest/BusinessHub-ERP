@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Card } from "@/components/ui";
+import { useToast } from "@/components/ui";
 
 import {
   BusinessToolbar,
@@ -13,6 +14,7 @@ import { businessService } from "../services/businessService";
 
 export default function BusinessPage() {
   const navigate = useNavigate();
+  const toast = useToast();
 
   const {
     businesses,
@@ -40,11 +42,11 @@ export default function BusinessPage() {
 
       await refreshBusinesses();
 
-      alert("Business deleted successfully.");
+      toast.success("Business deleted successfully.");
     } catch (error) {
       console.error(error);
 
-      alert("Unable to delete business.");
+      toast.error("Unable to delete business.");
     }
   }
 
