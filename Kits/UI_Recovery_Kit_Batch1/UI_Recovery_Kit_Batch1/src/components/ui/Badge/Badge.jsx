@@ -1,1 +1,0 @@
-export default function Badge({children}){return <span className="px-2 py-1 rounded-full text-xs bg-slate-100">{children}</span>}
