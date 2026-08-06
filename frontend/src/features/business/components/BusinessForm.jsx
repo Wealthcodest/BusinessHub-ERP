@@ -37,13 +37,13 @@ export default function BusinessForm({
   onSubmit,
   loading = false,
 }) {
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { errors },
-  } = useForm({
+const {
+  register,
+  handleSubmit,
+  setValue,
+  watch,
+  formState: { errors },
+} = useForm({
     resolver: zodResolver(businessSchema),
     defaultValues: {
       name: "",
@@ -67,11 +67,17 @@ export default function BusinessForm({
     },
   });
 
+  console.log("Validation Errors:", errors);
+  
   const logo = watch("logo");
 
-  const submitForm = (data) => {
-    if (onSubmit) onSubmit(data);
-  };
+ const submitForm = (data) => {
+  console.log("FORM DATA:", data);
+
+  if (onSubmit) {
+    onSubmit(data);
+  }
+};
 
   return (
     <form

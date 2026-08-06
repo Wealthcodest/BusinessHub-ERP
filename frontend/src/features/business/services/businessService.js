@@ -1,138 +1,127 @@
-import mockBusinesses from "../data/mockBusinesses";
+import {
+  getBusinesses,
+  saveBusinesses,
+  seedBusinesses,
+} from "../storage/businessStorage";
 
-let businesses = [...mockBusinesses];
+/*
+|--------------------------------------------------------------------------
+| Seed Data
+|--------------------------------------------------------------------------
+*/
+
+const defaultBusinesses = [
+  {
+    id: "1",
+    name: "Glamour Media House",
+    industry: "Media & Advertising",
+    owner: "Solomon",
+    email: "info@glamourmediahouse.com",
+    phone: "+234 800 000 0000",
+    website: "www.glamourmediahouse.com",
+    country: "Nigeria",
+    currency: "NGN",
+    status: "active",
+    logo: "",
+    createdAt: "2026-08-04",
+  },
+];
+
+seedBusinesses(defaultBusinesses);
+
+/*
+|--------------------------------------------------------------------------
+| Business Service
+|--------------------------------------------------------------------------
+*/
 
 export const businessService = {
-  // ==========================
-  // GET ALL BUSINESSES
-  // ==========================
+  /*
+  |--------------------------------------------------------------------------
+  | Get All Businesses
+  |--------------------------------------------------------------------------
+  */
+
   async getAll() {
-    return [...businesses];
+    return getBusinesses();
   },
 
-  // ==========================
-  // GET BUSINESS BY ID
-  // ==========================
+  /*
+  |--------------------------------------------------------------------------
+  | Get One Business
+  |--------------------------------------------------------------------------
+  */
+
   async getById(id) {
-    return (
-      businesses.find(
-        (business) => business.id === Number(id)
-      ) || null
+    const businesses = getBusinesses();
+
+    return businesses.find(
+      (business) => String(business.id) === String(id)
     );
   },
 
-  // ==========================
-  // CREATE BUSINESS
-  // ==========================
+  /*
+  |--------------------------------------------------------------------------
+  | Create Business
+  |--------------------------------------------------------------------------
+  */
+
   async create(data) {
-    const newBusiness = {
-      id: Date.now(),
+    const businesses = getBusinesses();
 
+    const business = {
       ...data,
-
-      createdAt: new Date()
-        .toISOString()
-        .split("T")[0],
+      id: Date.now().toString(),
+      createdAt: new Date().toISOString().split("T")[0],
     };
 
-    businesses.unshift(newBusiness);
+    businesses.push(business);
 
-    return newBusiness;
+    saveBusinesses(businesses);
+
+    return business;
   },
 
-  // ==========================
-  // UPDATE BUSINESS
-  // ==========================
+  /*
+  |--------------------------------------------------------------------------
+  | Update Business
+  |--------------------------------------------------------------------------
+  */
+
   async update(id, data) {
-    const index = businesses.findIndex(
-      (business) => business.id === Number(id)
+    const businesses = getBusinesses();
+
+    const updatedBusinesses = businesses.map((business) =>
+      String(business.id) === String(id)
+        ? {
+            ...business,
+            ...data,
+          }
+        : business
     );
 
-    if (index === -1) {
-      throw new Error("Business not found.");
-    }
+    saveBusinesses(updatedBusinesses);
 
-    businesses[index] = {
-      ...businesses[index],
-      ...data,
-    };
-
-    return businesses[index];
+    return updatedBusinesses.find(
+      (business) => String(business.id) === String(id)
+    );
   },
 
-  // ==========================
-  // DELETE BUSINESS
-  // ==========================
+  /*
+  |--------------------------------------------------------------------------
+  | Delete Business
+  |--------------------------------------------------------------------------
+  */
+
   async delete(id) {
-    const index = businesses.findIndex(
-      (business) => business.id === Number(id)
+    const businesses = getBusinesses();
+
+    const filtered = businesses.filter(
+      (business) => String(business.id) !== String(id)
     );
 
-    if (index === -1) {
-      throw new Error("Business not found.");
-    }
-
-    businesses.splice(index, 1);
+    saveBusinesses(filtered);
 
     return true;
   },
-
-  // ==========================
-  // SEARCH BUSINESSES
-  // ==========================
-  async search(keyword = "") {
-    if (!keyword.trim()) {
-      return [...businesses];
-    }
-
-    const search = keyword.toLowerCase();
-
-    return businesses.filter((business) =>
-      [
-        business.name,
-        business.industry,
-        business.owner,
-        business.email,
-        business.phone,
-      ]
-        .filter(Boolean)
-        .some((value) =>
-          value.toLowerCase().includes(search)
-        )
-    );
-  },
-
-  // ==========================
-  // FILTER BY STATUS
-  // ==========================
-  async filterByStatus(status) {
-    if (!status) return [...businesses];
-
-    return businesses.filter(
-      (business) => business.status === status
-    );
-  },
-
-  // ==========================
-  // BUSINESS STATISTICS
-  // ==========================
-  async getStatistics() {
-    const total = businesses.length;
-
-    const active = businesses.filter(
-      (business) => business.status === "active"
-    ).length;
-
-    const inactive = businesses.filter(
-      (business) => business.status === "inactive"
-    ).length;
-
-    return {
-      total,
-      active,
-      inactive,
-    };
-  },
 };
-
-export default businessService;

@@ -1,35 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { businessService } from "../services/businessService";
 
 export default function useBusinesses() {
+  const [businesses, setBusinesses] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    const [businesses, setBusinesses] = useState([]);
+  const loadBusinesses = useCallback(async () => {
+    try {
+      setLoading(true);
 
-    const [loading, setLoading] = useState(true);
+      const data = await businessService.getAll();
 
-    useEffect(() => {
+      setBusinesses(data);
+    } catch (error) {
+      console.error("Failed to load businesses.", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-        businessService
-            .getAll()
-            .then((data) => {
+  useEffect(() => {
+    loadBusinesses();
+  }, [loadBusinesses]);
 
-                setBusinesses(data);
-
-            })
-            .finally(() => {
-
-                setLoading(false);
-
-            });
-
-    }, []);
-
-    return {
-
-        businesses,
-
-        loading,
-
-    };
-
+  return {
+    businesses,
+    loading,
+    refreshBusinesses: loadBusinesses,
+  };
 }

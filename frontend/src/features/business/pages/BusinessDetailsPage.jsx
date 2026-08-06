@@ -7,6 +7,9 @@ import {
   BusinessProfileCard,
   BusinessInformation,
   BusinessStatistics,
+  BusinessQuickActions,
+  BusinessActivity,
+  BusinessHealth,
 } from "../components";
 
 import { businessService } from "../services/businessService";
@@ -27,6 +30,7 @@ export default function BusinessDetailsPage() {
       const data = await businessService.getById(id);
 
       if (!data) {
+        alert("Business not found.");
         navigate("/businesses");
         return;
       }
@@ -34,6 +38,7 @@ export default function BusinessDetailsPage() {
       setBusiness(data);
     } catch (error) {
       console.error(error);
+      alert("Unable to load business.");
       navigate("/businesses");
     } finally {
       setLoading(false);
@@ -42,14 +47,24 @@ export default function BusinessDetailsPage() {
 
   if (loading) {
     return (
-      <div className="flex h-64 items-center justify-center">
+      <div className="flex h-64 items-center justify-center text-lg">
         Loading Business...
+      </div>
+    );
+  }
+
+  if (!business) {
+    return (
+      <div className="flex h-64 items-center justify-center text-lg">
+        Business not found.
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
+
+      {/* Header */}
 
       <div className="flex items-center justify-between">
 
@@ -62,6 +77,8 @@ export default function BusinessDetailsPage() {
 
       </div>
 
+      {/* Business Profile */}
+
       <BusinessProfileCard
         business={business}
         onEdit={() =>
@@ -69,11 +86,33 @@ export default function BusinessDetailsPage() {
         }
       />
 
+      {/* Business Information */}
+
       <BusinessInformation
         business={business}
       />
 
+      {/* Statistics */}
+
       <BusinessStatistics />
+
+      {/* Activity + Health */}
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <div className="lg:col-span-2">
+          <BusinessActivity />
+        </div>
+
+        <BusinessHealth />
+
+      </div>
+
+      {/* Quick Actions */}
+
+      <BusinessQuickActions
+        businessId={business.id}
+      />
 
     </div>
   );

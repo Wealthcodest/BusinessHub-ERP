@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { BusinessStatusBadge } from ".";
 import { BusinessActions } from ".";
 
-export default function BusinessRow({ business }) {
+export default function BusinessRow({
+  business,
+  onDelete,
+}) {
   const navigate = useNavigate();
 
   return (
@@ -18,7 +21,7 @@ export default function BusinessRow({ business }) {
       </td>
 
       <td className="px-4 py-4">
-        {business.owner}
+        {business.owner || "-"}
       </td>
 
       <td className="px-4 py-4">
@@ -44,7 +47,10 @@ export default function BusinessRow({ business }) {
           }
 
           onDelete={() =>
-            console.log("Delete", business.id)
+            onDelete(
+              business.id,
+              business.name
+            )
           }
 
         />

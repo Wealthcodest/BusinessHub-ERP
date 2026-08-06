@@ -38,11 +38,20 @@ export const businessSchema = z.object({
     .max(20, "Phone number is too long."),
 
   website: z
-    .union([
-      z.literal(""),
-      z.string().url("Please enter a valid website URL."),
-    ])
-    .optional(),
+  .string()
+  .optional()
+  .refine(
+    (value) => {
+      if (!value || value.trim() === "") return true;
+
+      return /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\/.*)?$/.test(
+        value
+      );
+    },
+    {
+      message: "Please enter a valid website.",
+    }
+  ),
 
   // =========================
   // ADDRESS

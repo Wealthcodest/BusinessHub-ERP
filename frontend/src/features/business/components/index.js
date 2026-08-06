@@ -12,3 +12,7 @@ export { default as BusinessLogoUpload } from "./BusinessLogoUpload";
 export { default as BusinessProfileCard } from "./BusinessProfileCard";
 export { default as BusinessInformation } from "./BusinessInformation";
 export { default as BusinessStatistics } from "./BusinessStatistics";
+
+export { default as BusinessQuickActions } from "./BusinessQuickActions";
+export { default as BusinessActivity } from "./BusinessActivity";
+export { default as BusinessHealth } from "./BusinessHealth";

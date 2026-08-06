@@ -1,3 +1,5 @@
+import TestModal from "@/features/business/pages/TestModal";
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // Layout
@@ -35,7 +37,8 @@ export default function AppRoutes() {
             path="businesses/:id/edit"
             element={<BusinessEditPage />}
           />
-
+          {/* Temporary Test Route */}
+          <Route path="test-modal" element={<TestModal />} />
         </Route>
 
       </Routes>

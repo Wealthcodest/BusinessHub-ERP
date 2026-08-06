@@ -3,6 +3,7 @@ import BusinessRow from "./BusinessRow";
 export default function BusinessTable({
 
     businesses,
+    onDelete,
 
 }) {
 
@@ -65,6 +66,7 @@ export default function BusinessTable({
                             key={business.id}
 
                             business={business}
+                            onDelete={onDelete}
 
                         />
 

@@ -9,6 +9,7 @@ import {
 } from "../components";
 
 import useBusinesses from "../hooks/useBusinesses";
+import { businessService } from "../services/businessService";
 
 export default function BusinessPage() {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ export default function BusinessPage() {
   const {
     businesses,
     loading,
+    refreshBusinesses,
   } = useBusinesses();
 
   const [search, setSearch] = useState("");
@@ -25,6 +27,26 @@ export default function BusinessPage() {
       .toLowerCase()
       .includes(search.toLowerCase())
   );
+
+  async function handleDelete(id, name) {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${name}"?`
+    );
+
+    if (!confirmed) return;
+
+    try {
+      await businessService.delete(id);
+
+      await refreshBusinesses();
+
+      alert("Business deleted successfully.");
+    } catch (error) {
+      console.error(error);
+
+      alert("Unable to delete business.");
+    }
+  }
 
   if (loading) {
     return (
@@ -36,8 +58,6 @@ export default function BusinessPage() {
 
   return (
     <div className="space-y-6">
-
-      {/* Page Header */}
 
       <div className="flex items-center justify-between">
 
@@ -55,8 +75,6 @@ export default function BusinessPage() {
 
       </div>
 
-      {/* Business List */}
-
       <Card>
 
         <BusinessToolbar
@@ -67,6 +85,7 @@ export default function BusinessPage() {
 
         <BusinessTable
           businesses={filteredBusinesses}
+          onDelete={handleDelete}
         />
 
       </Card>
