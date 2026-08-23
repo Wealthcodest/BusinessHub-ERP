@@ -1,0 +1,4 @@
+import { Card } from "@/components/ui";
+import QuotationStatusBadge from "./QuotationStatusBadge";
+export default function QuotationSummaryCard({ quotation }) { return <Card><div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-sm font-medium text-slate-500">Quotation Number</p><h2 className="mt-1 text-xl font-semibold text-slate-900">{quotation.quotationNumber}</h2></div><QuotationStatusBadge status={quotation.status} /></div><div className="mt-5 grid grid-cols-2 gap-5 text-sm"><Detail label="Issue Date" value={quotation.issueDate} /><Detail label="Expiry Date" value={quotation.expiryDate} /><Detail label="Currency" value={quotation.currency} /><Detail label="Created By" value={quotation.createdBy} /></div></Card>; }
+const Detail = ({ label, value }) => <div><p className="text-xs uppercase tracking-wide text-slate-400">{label}</p><p className="mt-1 font-medium text-slate-700">{value || "—"}</p></div>;

@@ -1,13 +1,9 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Card } from "@/components/ui";
 import { useToast } from "@/components/ui";
 
-import {
-  BusinessToolbar,
-  BusinessTable,
-} from "../components";
+import { BusinessTable } from "../components";
 
 import useBusinesses from "../hooks/useBusinesses";
 import { businessService } from "../services/businessService";
@@ -21,14 +17,6 @@ export default function BusinessPage() {
     loading,
     refreshBusinesses,
   } = useBusinesses();
-
-  const [search, setSearch] = useState("");
-
-  const filteredBusinesses = businesses.filter((business) =>
-    business.name
-      .toLowerCase()
-      .includes(search.toLowerCase())
-  );
 
   async function handleDelete(id, name) {
     const confirmed = window.confirm(
@@ -48,14 +36,6 @@ export default function BusinessPage() {
 
       toast.error("Unable to delete business.");
     }
-  }
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        Loading Businesses...
-      </div>
-    );
   }
 
   return (
@@ -79,14 +59,12 @@ export default function BusinessPage() {
 
       <Card>
 
-        <BusinessToolbar
-          search={search}
-          setSearch={setSearch}
-          onCreate={() => navigate("/businesses/new")}
-        />
-
         <BusinessTable
-          businesses={filteredBusinesses}
+          businesses={businesses}
+          loading={loading}
+          onCreate={() => navigate("/businesses/new")}
+          onView={(business) => navigate(`/businesses/${business.id}`)}
+          onEdit={(business) => navigate(`/businesses/${business.id}/edit`)}
           onDelete={handleDelete}
         />
 

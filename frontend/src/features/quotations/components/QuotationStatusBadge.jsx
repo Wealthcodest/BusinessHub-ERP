@@ -1,0 +1,2 @@
+const styles = { draft: "bg-slate-100 text-slate-700", sent: "bg-sky-50 text-sky-700", accepted: "bg-emerald-50 text-emerald-700", rejected: "bg-rose-50 text-rose-700", expired: "bg-amber-50 text-amber-700" };
+export default function QuotationStatusBadge({ status }) { return <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold capitalize ${styles[status] || styles.draft}`}>{status}</span>; }

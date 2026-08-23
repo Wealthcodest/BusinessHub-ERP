@@ -1,0 +1,2 @@
+import { useCallback, useEffect, useState } from "react"; import { expenseService } from "../services/expenseService";
+export default function useExpenses() { const [expenses, setExpenses] = useState([]); const [loading, setLoading] = useState(true); const refreshExpenses = useCallback(async () => { setLoading(true); try { setExpenses(await expenseService.getAll()); } finally { setLoading(false); } }, []); useEffect(() => { refreshExpenses(); }, [refreshExpenses]); return { expenses, loading, refreshExpenses }; }

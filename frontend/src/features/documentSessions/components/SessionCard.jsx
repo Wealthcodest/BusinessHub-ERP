@@ -1,0 +1,7 @@
+import { Card } from "@/components/ui";
+import SessionHeader from "./SessionHeader";
+import SessionDescription from "./SessionDescription";
+import SessionItemsTable from "./SessionItemsTable";
+import SessionNotes from "./SessionNotes";
+import SessionTotals from "./SessionTotals";
+export default function SessionCard({ session, index, count, currency, products, sessionOptions, onUpdate, onMove, onDuplicate, onDelete, onToggle, onItemChange, onRemoveItem, onDuplicateItem, onRemoveItems, onDuplicateItems, onMoveItems, onAddItem }) { return <Card><div className="-m-6 overflow-hidden"><SessionHeader session={session} index={index} count={count} onChange={(field, value) => onUpdate(field, value)} onMove={onMove} onDuplicate={onDuplicate} onDelete={onDelete} onToggle={onToggle} />{!session.collapsed && <><SessionDescription value={session.description} onChange={(value) => onUpdate("description", value)} /><SessionItemsTable items={session.items} products={products} currency={currency} sessionOptions={sessionOptions} sessionIndex={index} onItemChange={onItemChange} onRemoveItem={onRemoveItem} onDuplicateItem={onDuplicateItem} onRemoveItems={onRemoveItems} onDuplicateItems={onDuplicateItems} onMoveItems={onMoveItems} onAddItem={onAddItem} /><SessionNotes value={session.notes} onChange={(value) => onUpdate("notes", value)} /><SessionTotals session={session} currency={currency} onChange={onUpdate} /></>}</div></Card>; }

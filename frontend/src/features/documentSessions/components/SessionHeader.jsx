@@ -1,0 +1,3 @@
+import { Input } from "@/components/ui";
+import SessionToolbar from "./SessionToolbar";
+export default function SessionHeader({ session, index, count, onChange, ...actions }) { return <div className="flex gap-3 border-b border-teal-100 bg-teal-50 p-4"><div className="min-w-0 flex-1"><span className="text-xs font-bold uppercase tracking-wider text-[#103746]">Session {index + 1}</span><Input value={session.title} aria-label="Session title" onChange={(event) => onChange("title", event.target.value)} className="mt-1 border-0 bg-transparent px-0 text-lg font-semibold text-[#103746]" /></div><SessionToolbar index={index} count={count} collapsed={session.collapsed} {...actions} /></div>; }

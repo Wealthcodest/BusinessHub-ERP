@@ -1,0 +1,7 @@
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Breadcrumb, LoadingSkeleton, PageHeader, useToast } from "@/components/ui";
+import { CustomerForm } from "../components";
+import { getBusinesses } from "@/features/business/storage/businessStorage";
+import { customerService } from "../services/customerService";
+export default function CustomerEditPage() { const { id } = useParams(); const navigate = useNavigate(); const toast = useToast(); const [customer, setCustomer] = useState(null); const [loading, setLoading] = useState(true); useEffect(() => { async function loadCustomer() { const record = await customerService.getById(id); if (!record) { toast.warning("Customer not found."); navigate("/customers"); return; } setCustomer(record); setLoading(false); } loadCustomer(); }, [id, navigate, toast]); async function handleSubmit(data) { try { await customerService.update(id, data); toast.success("Customer updated successfully."); navigate("/customers"); } catch { toast.error("Unable to update customer."); } } if (loading) return <LoadingSkeleton />; return <div className="space-y-6"><PageHeader title="Edit Customer" description="Update customer information." breadcrumb={<Breadcrumb items={[{ label: "Customers", href: "/customers" }, { label: "Edit Customer" }]} />} /><CustomerForm businesses={getBusinesses()} defaultValues={customer} onSubmit={handleSubmit} onCreateBusiness={() => navigate("/businesses/new")} /></div>; }

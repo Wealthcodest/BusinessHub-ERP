@@ -1,0 +1,12 @@
+import { Button, Card, Input } from "@/components/ui";
+import { emptyPaymentMilestone, paymentScheduleAmounts, paymentScheduleTotal } from "@/utils/paymentSchedule";
+
+const money = (value, currency) => new Intl.NumberFormat("en-NG", { style: "currency", currency: currency || "NGN" }).format(Number(value || 0));
+
+export default function PaymentScheduleEditor({ value, onChange, grandTotal, currency }) {
+  const milestones = value?.milestones || [];
+  const amounts = paymentScheduleAmounts({ milestones }, grandTotal);
+  const total = paymentScheduleTotal({ milestones });
+  function update(index, patch) { onChange({ type: "percentage", milestones: milestones.map((item, itemIndex) => itemIndex === index ? { ...item, ...patch } : item) }); }
+  return <Card><div className="mb-5 flex flex-wrap items-center justify-between gap-3"><div><h2 className="text-lg font-semibold">Payment Schedule</h2><p className="text-sm text-slate-500">Optional milestones calculated from the grand total.</p></div><Button type="button" variant="outline" onClick={() => onChange({ type: "percentage", milestones: [...milestones, emptyPaymentMilestone(milestones.length)] })}>+ Add Payment Milestone</Button></div>{milestones.length === 0 ? <p className="text-sm text-slate-500">No payment schedule configured.</p> : <div className="space-y-3">{amounts.map((milestone, index) => <div key={milestone.id || index} className="grid gap-3 rounded-lg border border-slate-200 p-3 md:grid-cols-[1fr_8rem_10rem_auto] md:items-end"><label className="text-sm font-medium">Milestone<Input className="mt-1" value={milestone.label} onChange={(event) => update(index, { label: event.target.value })} /></label><label className="text-sm font-medium">Percentage<Input className="mt-1" type="number" min="0" max="100" step="0.01" value={milestone.percentage} onChange={(event) => update(index, { percentage: event.target.value })} /></label><div className="pb-2 text-sm"><span className="block text-slate-500">Amount</span><b>{money(milestone.amount, currency)}</b></div><Button type="button" variant="ghost" className="text-rose-600" onClick={() => onChange({ type: "percentage", milestones: milestones.filter((_, itemIndex) => itemIndex !== index) })}>Remove</Button></div>)}<p className={Math.abs(total - 100) < 0.0001 ? "text-sm text-emerald-700" : "text-sm text-rose-600"}>Total: {total}% {Math.abs(total - 100) < 0.0001 ? "" : "— payment milestones must total 100%."}</p></div>}</Card>;
+}

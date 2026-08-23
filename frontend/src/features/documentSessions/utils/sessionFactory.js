@@ -1,0 +1,4 @@
+const id = (prefix) => `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+export const createSessionItem = (product = null) => ({ id: id("item"), productId: product?.id || null, description: product?.name || "", unit: product?.unit || "pcs", quantity: 1, unitPrice: product?.sellingPrice || 0, lineTotal: 0 });
+export const createDocumentSession = (title = "General Items") => ({ id: id("session"), title, description: "", notes: "", sortOrder: 0, collapsed: false, discountType: "percentage", discountValue: 0, taxRate: 0, subtotal: 0, discountAmount: 0, taxAmount: 0, netTotal: 0, items: [createSessionItem()] });
+export const normalizeDocumentSessions = (document, products = []) => document.sessions?.length ? document.sessions : [createDocumentSession(products, "General Items")];

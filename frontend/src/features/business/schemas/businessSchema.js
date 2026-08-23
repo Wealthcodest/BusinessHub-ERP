@@ -93,9 +93,21 @@ export const businessSchema = z.object({
     .max(1000, "Description cannot exceed 1000 characters.")
     .optional(),
 
+  tagline: z
+    .string()
+    .max(180, "Tagline cannot exceed 180 characters.")
+    .optional(),
+
   logo: z
     .any()
     .optional(),
+  paymentAccounts: z.array(z.object({
+    id: z.string().optional(),
+    bankName: z.string().max(120).optional(),
+    accountName: z.string().max(150).optional(),
+    accountNumber: z.string().max(80).optional(),
+    isPrimary: z.boolean().optional(),
+  })).optional(),
 });
 
 export default businessSchema;

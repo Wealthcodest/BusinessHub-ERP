@@ -1,0 +1,7 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ConfirmDialog, PageHeader, Section, useToast } from "@/components/ui";
+import { ProductStatistics, ProductTable } from "../components";
+import useProducts from "../hooks/useProducts";
+import { productService } from "../services/productService";
+export default function ProductPage() { const navigate = useNavigate(); const toast = useToast(); const { products, loading, refreshProducts } = useProducts(); const [itemToDelete, setItemToDelete] = useState(null); async function handleDelete() { try { await productService.delete(itemToDelete.id); await refreshProducts(); toast.success("Product deleted successfully."); } catch { toast.error("Unable to delete product."); } finally { setItemToDelete(null); } } return <div className="space-y-8"><PageHeader title="Product & Service Management" description="Manage your catalog, pricing, and inventory." /><ProductStatistics products={products} /><Section title="Catalog" description="Search, sort, and manage products and services."><ProductTable products={products} loading={loading} onCreate={() => navigate("/products/new")} onView={(item) => navigate(`/products/${item.id}`)} onEdit={(item) => navigate(`/products/${item.id}/edit`)} onDelete={setItemToDelete} /></Section><ConfirmDialog open={Boolean(itemToDelete)} title="Delete Product" message={`Are you sure you want to delete ${itemToDelete?.name || "this item"}?`} confirmText="Delete" danger onConfirm={handleDelete} onCancel={() => setItemToDelete(null)} /></div>; }

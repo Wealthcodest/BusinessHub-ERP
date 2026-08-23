@@ -1,0 +1,3 @@
+import { Input } from "@/components/ui";
+const HEX = /^#[0-9a-fA-F]{6}$/;
+export default function ColorField({ label, value, onChange }) { const color = HEX.test(value || "") ? value : "#000000"; return <label className="block text-sm font-medium text-slate-700">{label}<div className="mt-1 flex items-center gap-2"><span className="h-10 w-10 rounded border border-slate-200" style={{ backgroundColor: color }} /><Input type="color" value={color} onChange={(event) => onChange(event.target.value)} className="h-10 w-12 p-1" aria-label={`${label} picker`} /><Input value={value} onChange={(event) => onChange(event.target.value)} onBlur={(event) => { if (!HEX.test(event.target.value)) onChange(color); }} placeholder="#103746" aria-label={`${label} HEX value`} /></div></label>; }

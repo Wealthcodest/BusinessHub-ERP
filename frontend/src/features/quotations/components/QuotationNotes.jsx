@@ -1,0 +1,2 @@
+import { Card } from "@/components/ui";
+export default function QuotationNotes({ notes, terms }) { return <div className="grid gap-6 lg:grid-cols-2"><Card><h2 className="text-lg font-semibold text-slate-900">Notes</h2><p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-600">{notes || "No notes recorded."}</p></Card><Card><h2 className="text-lg font-semibold text-slate-900">Terms & Conditions</h2><p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-600">{terms || "No terms recorded."}</p></Card></div>; }

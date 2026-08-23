@@ -64,6 +64,11 @@ export default function BusinessInformation({
 
       </div>
 
+      <div className="mt-8 border-t pt-6">
+        <h3 className="mb-4 text-lg font-semibold">Payment / Bank Details</h3>
+        {business.paymentAccounts?.length ? <div className="grid gap-3 md:grid-cols-2">{business.paymentAccounts.map((account) => <div key={account.id} className="rounded-lg border border-slate-200 p-4"><div className="flex justify-between gap-2"><b>{account.bankName || "Bank account"}</b>{account.isPrimary && <span className="text-xs font-semibold text-emerald-700">PRIMARY</span>}</div><p className="mt-3 text-sm text-slate-500">Account Name</p><p className="font-medium">{account.accountName || "-"}</p><p className="mt-3 text-sm text-slate-500">Account Number</p><p className="font-medium">{account.accountNumber || "-"}</p></div>)}</div> : <p className="text-sm text-slate-500">No payment accounts have been added.</p>}
+      </div>
+
     </div>
   );
 }

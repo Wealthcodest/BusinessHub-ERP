@@ -24,6 +24,15 @@ const defaultBusinesses = [
     status: "active",
     logo: "",
     createdAt: "2026-08-04",
+    paymentAccounts: [
+      {
+        id: "account-default-1",
+        bankName: "GTBank",
+        accountName: "Glamour Media House",
+        accountNumber: "0123456789",
+        isPrimary: true,
+      },
+    ],
   },
 ];
 
@@ -69,8 +78,10 @@ export const businessService = {
   async create(data) {
     const businesses = getBusinesses();
 
+    const paymentAccounts = normalizePaymentAccounts(data.paymentAccounts);
     const business = {
       ...data,
+      paymentAccounts,
       id: Date.now().toString(),
       createdAt: new Date().toISOString().split("T")[0],
     };
@@ -96,6 +107,7 @@ export const businessService = {
         ? {
             ...business,
             ...data,
+            paymentAccounts: normalizePaymentAccounts(data.paymentAccounts ?? business.paymentAccounts),
           }
         : business
     );
@@ -125,3 +137,21 @@ export const businessService = {
     return true;
   },
 };
+
+function normalizePaymentAccounts(accounts = []) {
+  const complete = (accounts || []).filter(
+    (account) => account && (account.bankName || account.accountName || account.accountNumber)
+  );
+
+  if (!complete.length) {
+    return [];
+  }
+
+  const primaryIndex = complete.findIndex((account) => account.isPrimary);
+
+  return complete.map((account, index) => ({
+    ...account,
+    id: account.id || `account-${Date.now()}-${index}`,
+    isPrimary: primaryIndex === -1 ? index === 0 : index === primaryIndex,
+  }));
+}

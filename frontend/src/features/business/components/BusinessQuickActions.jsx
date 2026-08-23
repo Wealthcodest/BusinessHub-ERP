@@ -18,6 +18,10 @@ export default function BusinessQuickActions({ businessId }) {
       onClick: () => navigate(`/invoices/new?business=${businessId}`),
     },
     {
+      label: "Document Themes",
+      onClick: () => navigate(`/businesses/${businessId}/themes`),
+    },
+    {
       label: "View Reports",
       onClick: () => navigate(`/reports?business=${businessId}`),
     },

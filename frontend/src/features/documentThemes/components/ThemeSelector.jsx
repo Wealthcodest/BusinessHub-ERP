@@ -1,0 +1,4 @@
+import { useEffect } from "react";
+import useDocumentThemes from "../hooks/useDocumentThemes";
+
+export default function ThemeSelector({ businessId, value, onChange, label = "Document Theme" }) { const { themes, loading } = useDocumentThemes(businessId); useEffect(() => { if (businessId && themes.length && !themes.some((theme) => theme.id === value)) onChange(themes.find((theme) => theme.isDefault)?.id || themes[0].id); }, [businessId, themes, value, onChange]); return <label className="mb-3 block text-sm font-medium text-slate-700">{label}<select value={value || ""} disabled={!businessId || loading} onChange={(event) => onChange(event.target.value)} className="mt-1 w-full rounded-lg border border-slate-200 bg-white p-2.5 disabled:bg-slate-50">{!businessId && <option value="">Select a business first</option>}{themes.map((theme) => <option key={theme.id} value={theme.id}>{theme.name}{theme.isDefault ? " (Default)" : ""}</option>)}</select></label>; }

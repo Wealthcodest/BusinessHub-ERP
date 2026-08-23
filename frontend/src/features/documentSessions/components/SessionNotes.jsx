@@ -1,0 +1,2 @@
+import { Textarea } from "@/components/ui";
+export default function SessionNotes({ value, onChange }) { return <div className="border-t border-slate-100 px-4 py-4"><label className="text-sm font-medium text-slate-700">Session Notes</label><Textarea rows={2} value={value || ""} onChange={(event) => onChange(event.target.value)} placeholder="Optional notes for this session" className="mt-1" /></div>; }

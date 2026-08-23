@@ -24,32 +24,42 @@ const menus = [
   {
     name: "Customers",
     icon: Users,
-    path: "#",
+    path: "/customers",
   },
   {
-    name: "Inventory",
+    name: "Products & Services",
     icon: Package,
-    path: "#",
+    path: "/products",
+  },
+  {
+    name: "Quotations",
+    icon: FileText,
+    path: "/quotations",
   },
   {
     name: "Invoices",
-    icon: FileText,
-    path: "#",
-  },
-  {
-    name: "Accounting",
     icon: CreditCard,
-    path: "#",
+    path: "/invoices",
   },
   {
     name: "Reports",
     icon: BarChart3,
-    path: "#",
+    path: "/reports",
   },
   {
     name: "Settings",
     icon: Settings,
-    path: "#",
+    path: "/settings/document-themes",
+  },
+  {
+    name: "Payments",
+    icon: CreditCard,
+    path: "/payments",
+  },
+  {
+    name: "Project Expenses",
+    icon: CreditCard,
+    path: "/project-expenses",
   },
 ];
 

@@ -1,0 +1,4 @@
+import { Card } from "@/components/ui";
+const money = (value, currency) => new Intl.NumberFormat("en-NG", { style: "currency", currency: currency || "NGN", maximumFractionDigits: 2 }).format(Number(value || 0));
+export default function QuotationTotalsCard({ totals, currency }) { return <Card><h2 className="text-lg font-semibold text-slate-900">Quotation Totals</h2><dl className="mt-4 space-y-3 text-sm"><Row label="Subtotal" value={money(totals.subtotal, currency)} /><Row label="Discount" value={`-${money(totals.discountAmount, currency)}`} /><Row label="Tax" value={money(totals.taxAmount, currency)} /><div className="flex justify-between border-t border-slate-200 pt-4 text-base font-bold text-[#103746]"><dt>Grand Total</dt><dd>{money(totals.grandTotal, currency)}</dd></div></dl></Card>; }
+const Row = ({ label, value }) => <div className="flex justify-between text-slate-600"><dt>{label}</dt><dd className="font-medium text-slate-800">{value}</dd></div>;

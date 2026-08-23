@@ -1,0 +1,2 @@
+import { useCallback, useEffect, useState } from "react"; import { invoiceService } from "../services/invoiceService";
+export default function useInvoices() { const [invoices, setInvoices] = useState([]), [loading, setLoading] = useState(true); const refreshInvoices = useCallback(async () => { setLoading(true); try { setInvoices(await invoiceService.getAll()); } finally { setLoading(false); } }, []); useEffect(() => { refreshInvoices(); }, [refreshInvoices]); return { invoices, loading, refreshInvoices }; }
