@@ -1,3 +1,3 @@
-import { useCallback, useEffect, useState } from "react";
-import { productService } from "../services/productService";
-export default function useProducts() { const [products, setProducts] = useState([]); const [loading, setLoading] = useState(true); const refreshProducts = useCallback(async () => { setLoading(true); try { setProducts(await productService.getAll()); } finally { setLoading(false); } }, []); useEffect(() => { refreshProducts(); }, [refreshProducts]); return { products, loading, refreshProducts }; }
+﻿import { useCallback, useEffect, useState } from "react";
+import { productService } from "../services/productService"; import { useActiveBusiness } from "@/app/ActiveBusinessContext";
+export default function useProducts() { const { activeBusinessId } = useActiveBusiness(); const [products, setProducts] = useState([]); const [loading, setLoading] = useState(true); const refreshProducts = useCallback(async () => { setLoading(true); try { setProducts((await productService.getAll()).filter((item) => !activeBusinessId || String(item.businessId) === activeBusinessId)); } finally { setLoading(false); } }, [activeBusinessId]); useEffect(() => { refreshProducts(); }, [refreshProducts]); return { products, loading, refreshProducts }; }

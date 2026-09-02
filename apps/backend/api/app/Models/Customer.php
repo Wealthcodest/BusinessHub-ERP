@@ -1,0 +1,4 @@
+<?php
+namespace App\Models;
+use Illuminate\Database\Eloquent\Model;
+class Customer extends Model { protected $fillable=['business_id','name','email','phone','address','city','state','country','tax_number','status']; public function business(){return $this->belongsTo(Business::class);} public function projects(){return $this->hasMany(Project::class);} public function quotations(){return $this->hasMany(Quotation::class);} public function invoices(){return $this->hasMany(Invoice::class);} public function payments(){return $this->hasMany(Payment::class);} public function expenses(){return $this->hasMany(Expense::class);} }

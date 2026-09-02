@@ -1,0 +1,49 @@
+﻿import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { BarChart3, FolderKanban, ReceiptText, TrendingDown, TrendingUp, WalletCards } from "lucide-react";
+import { Card, LoadingSkeleton, PageHeader } from "@/components/ui";
+import useCustomers from "@/features/customers/hooks/useCustomers";
+import useExpenses from "@/features/expenses/hooks/useExpenses";
+import useInvoices from "@/features/invoices/hooks/useInvoices";
+import usePayments from "@/features/payments/hooks/usePayments"; import { paymentService } from "@/features/payments/services/paymentService"; import { expenseService } from "@/features/expenses/services/expenseService";
+
+const money = (value, currency = "NGN") => new Intl.NumberFormat("en-NG", { style: "currency", currency }).format(Number(value || 0));
+
+export default function ProjectsPage() {
+  const navigate = useNavigate();
+  const { invoices, loading: invoicesLoading } = useInvoices();
+  const { expenses, loading: expensesLoading, refreshExpenses } = useExpenses();
+  const { payments, loading: paymentsLoading, refreshPayments } = usePayments();
+  const { customers, loading: customersLoading } = useCustomers();
+  const projects = useMemo(() => invoices.filter((invoice) => invoice.status !== "cancelled").map((invoice) => {
+    const projectExpenses = expenses.filter((expense) => String(expense.invoiceId) === String(invoice.id));
+    const projectPayments = payments.filter((payment) => String(payment.invoiceId) === String(invoice.id));
+    const revenue = Number(invoice.grandTotal || 0);
+    const cost = projectExpenses.reduce((sum, expense) => sum + Number(expense.amount || 0), 0);
+    const collected = projectPayments.reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
+    const profit = revenue - cost;
+    return { ...invoice, revenue, cost, collected, profit, outstanding: Math.max(0, revenue - collected), margin: revenue ? (profit / revenue) * 100 : 0 };
+  }), [invoices, expenses, payments]);
+  const totals = useMemo(() => projects.reduce((sum, project) => ({ revenue: sum.revenue + project.revenue, cost: sum.cost + project.cost, profit: sum.profit + project.profit, collected: sum.collected + project.collected, outstanding: sum.outstanding + project.outstanding }), { revenue: 0, cost: 0, profit: 0, collected: 0, outstanding: 0 }), [projects]);
+  const removePayment = async (id) => { if (!window.confirm("Delete this payment record?")) return; await paymentService.delete(id); await refreshPayments(); };
+  const removeExpense = async (id) => { if (!window.confirm("Delete this expense record?")) return; await expenseService.delete(id); await refreshExpenses(); };
+  const loading = invoicesLoading || expensesLoading || paymentsLoading || customersLoading;
+  const cards = [
+    { label: "Project revenue", value: totals.revenue, icon: TrendingUp, tone: "text-emerald-700" },
+    { label: "Project expenses", value: totals.cost, icon: TrendingDown, tone: "text-rose-700" },
+    { label: "Net profit", value: totals.profit, icon: BarChart3, tone: totals.profit >= 0 ? "text-teal-700" : "text-rose-700" },
+    { label: "Cash collected", value: totals.collected, icon: WalletCards, tone: "text-sky-700" },
+    { label: "Outstanding", value: totals.outstanding, icon: ReceiptText, tone: "text-amber-700" },
+  ];
+
+  if (loading) return <LoadingSkeleton />;
+  return <div className="space-y-6">
+    <PageHeader title="Project Management" description="Monitor project revenue, costs, profitability, and collection performance." />
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">{cards.map(({ label, value, icon: Icon, tone }) => <Card key={label}><div className="flex items-start justify-between"><p className="text-sm text-slate-500">{label}</p><Icon className={`h-5 w-5 ${tone}`} /></div><p className={`mt-2 text-xl font-bold ${tone}`}>{money(value)}</p></Card>)}</div>
+    <section className="rounded-2xl border border-slate-200 bg-white shadow-sm"><div className="flex items-center justify-between border-b border-slate-100 px-5 py-4"><div><h2 className="font-semibold text-slate-900">Project portfolio</h2><p className="mt-1 text-sm text-slate-500">Each invoice is tracked as a project. Select one for its detailed financial report.</p></div><span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-600">{projects.length} projects</span></div><div className="overflow-x-auto"><table className="w-full min-w-[1080px] text-sm"><thead className="bg-slate-50 text-left text-xs uppercase text-slate-500"><tr>{["Project", "Customer", "Status", "Revenue", "Expenses", "Profit", "Margin", "Collected", "Outstanding", ""].map((label) => <th key={label || "actions"} className="px-4 py-3 font-medium">{label}</th>)}</tr></thead><tbody>{projects.map((project) => { const customer = customers.find((item) => String(item.id) === String(project.customerId)); return <tr key={project.id} className="border-t border-slate-100"><td className="px-4 py-4 font-medium text-[#103746]">{project.invoiceNumber}</td><td className="px-4 py-4">{customer?.displayName || "—"}</td><td className="px-4 py-4"><span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium capitalize text-slate-700">{String(project.status || "draft").replaceAll("_", " ")}</span></td><td className="px-4 py-4">{money(project.revenue, project.currency)}</td><td className="px-4 py-4 text-rose-700">{money(project.cost, project.currency)}</td><td className={`px-4 py-4 font-semibold ${project.profit >= 0 ? "text-emerald-700" : "text-rose-700"}`}>{money(project.profit, project.currency)}</td><td className="px-4 py-4">{project.margin.toFixed(1)}%</td><td className="px-4 py-4 text-sky-700">{money(project.collected, project.currency)}</td><td className="px-4 py-4 text-amber-700">{money(project.outstanding, project.currency)}</td><td className="px-4 py-4"><button type="button" onClick={() => navigate(`/projects/${project.id}`)} className="font-medium text-[#18566E] hover:underline">View report</button></td></tr>; })}{!projects.length && <tr><td colSpan="10" className="px-4 py-16 text-center text-slate-500"><FolderKanban className="mx-auto mb-3 h-8 w-8" />Create an invoice to start tracking a project.</td></tr>}</tbody></table></div></section>
+    <section className="grid gap-6 xl:grid-cols-2">
+      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"><div className="border-b border-slate-100 px-5 py-4"><h2 className="font-semibold text-slate-900">All payment records</h2><p className="mt-1 text-sm text-slate-500">Collections across every project.</p></div><div className="max-h-[420px] overflow-auto"><table className="w-full text-sm"><thead className="sticky top-0 bg-slate-50 text-left text-xs uppercase text-slate-500"><tr><th className="px-4 py-3">Date</th><th className="px-4 py-3">Project</th><th className="px-4 py-3 text-right">Amount</th><th className="px-4 py-3">Actions</th></tr></thead><tbody>{payments.slice().sort((a,b)=>String(b.paymentDate).localeCompare(String(a.paymentDate))).map((payment)=><tr key={payment.id} className="border-t border-slate-100"><td className="px-4 py-3">{payment.paymentDate}</td><td className="px-4 py-3"><button onClick={()=>navigate(`/projects/${payment.invoiceId}`)} className="font-medium text-[#18566E] hover:underline">{invoices.find((invoice)=>String(invoice.id)===String(payment.invoiceId))?.invoiceNumber || "Archived project"}</button></td><td className="px-4 py-3 text-right font-semibold text-emerald-700">{money(payment.amount)}</td><td className="px-4 py-3 whitespace-nowrap"><button onClick={()=>navigate(`/payments/${payment.id}/edit`)} className="mr-3 font-medium text-blue-600 hover:underline">Edit</button><button onClick={()=>removePayment(payment.id)} className="font-medium text-rose-600 hover:underline">Delete</button></td></tr>)}{!payments.length&&<tr><td colSpan="4" className="px-4 py-10 text-center text-slate-500">No payments recorded.</td></tr>}</tbody></table></div></div>
+      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"><div className="border-b border-slate-100 px-5 py-4"><h2 className="font-semibold text-slate-900">All expense records</h2><p className="mt-1 text-sm text-slate-500">Costs across every project.</p></div><div className="max-h-[420px] overflow-auto"><table className="w-full text-sm"><thead className="sticky top-0 bg-slate-50 text-left text-xs uppercase text-slate-500"><tr><th className="px-4 py-3">Date</th><th className="px-4 py-3">Project</th><th className="px-4 py-3 text-right">Amount</th><th className="px-4 py-3">Actions</th></tr></thead><tbody>{expenses.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))).map((expense)=><tr key={expense.id} className="border-t border-slate-100"><td className="px-4 py-3">{expense.date}</td><td className="px-4 py-3"><button onClick={()=>navigate(`/projects/${expense.invoiceId}`)} className="font-medium text-[#18566E] hover:underline">{invoices.find((invoice)=>String(invoice.id)===String(expense.invoiceId))?.invoiceNumber || "Archived project"}</button></td><td className="px-4 py-3 text-right font-semibold text-rose-700">{money(expense.amount)}</td><td className="px-4 py-3 whitespace-nowrap"><button onClick={()=>navigate(`/project-expenses?invoice=${expense.invoiceId}&edit=${expense.id}`)} className="mr-3 font-medium text-blue-600 hover:underline">Edit</button><button onClick={()=>removeExpense(expense.id)} className="font-medium text-rose-600 hover:underline">Delete</button></td></tr>)}{!expenses.length&&<tr><td colSpan="4" className="px-4 py-10 text-center text-slate-500">No expenses recorded.</td></tr>}</tbody></table></div></div>
+    </section>
+  </div>;
+}

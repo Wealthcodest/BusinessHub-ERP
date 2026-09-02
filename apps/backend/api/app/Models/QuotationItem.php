@@ -1,0 +1,2 @@
+<?php
+namespace App\Models; use Illuminate\Database\Eloquent\Model; class QuotationItem extends Model{protected $fillable=['quotation_session_id','product_id','description','unit','quantity','unit_price','line_total','sort_order'];protected function casts():array{return ['quantity'=>'decimal:4','unit_price'=>'decimal:2','line_total'=>'decimal:2'];}public function session(){return $this->belongsTo(QuotationSession::class,'quotation_session_id');}}

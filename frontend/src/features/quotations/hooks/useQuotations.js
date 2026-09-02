@@ -1,3 +1,3 @@
-import { useCallback, useEffect, useState } from "react";
-import { quotationService } from "../services/quotationService";
-export default function useQuotations() { const [quotations, setQuotations] = useState([]); const [loading, setLoading] = useState(true); const refreshQuotations = useCallback(async () => { setLoading(true); try { setQuotations(await quotationService.getAll()); } finally { setLoading(false); } }, []); useEffect(() => { refreshQuotations(); }, [refreshQuotations]); return { quotations, loading, refreshQuotations }; }
+﻿import { useCallback, useEffect, useState } from "react";
+import { quotationService } from "../services/quotationService"; import { useActiveBusiness } from "@/app/ActiveBusinessContext";
+export default function useQuotations() { const { activeBusinessId } = useActiveBusiness(); const [quotations, setQuotations] = useState([]); const [loading, setLoading] = useState(true); const refreshQuotations = useCallback(async () => { setLoading(true); try { setQuotations((await quotationService.getAll()).filter((item) => !activeBusinessId || String(item.businessId) === activeBusinessId)); } finally { setLoading(false); } }, [activeBusinessId]); useEffect(() => { refreshQuotations(); }, [refreshQuotations]); return { quotations, loading, refreshQuotations }; }

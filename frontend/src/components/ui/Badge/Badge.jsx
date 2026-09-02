@@ -1,1 +1,2 @@
-export default function Badge({children}){return <span className="px-2 py-1 rounded-full text-xs bg-slate-100">{children}</span>}
+﻿const variants = { neutral: "bg-slate-100 text-slate-700", success: "bg-emerald-50 text-emerald-700 ring-emerald-600/10", warning: "bg-amber-50 text-amber-800 ring-amber-600/10", danger: "bg-rose-50 text-rose-700 ring-rose-600/10", info: "bg-cyan-50 text-cyan-800 ring-cyan-600/10", primary: "bg-[#103746]/10 text-[#103746] ring-[#103746]/10" };
+export default function Badge({ children, variant = "neutral", className = "" }) { return <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold ring-1 ring-inset ${variants[variant] || variants.neutral} ${className}`}>{children}</span>; }

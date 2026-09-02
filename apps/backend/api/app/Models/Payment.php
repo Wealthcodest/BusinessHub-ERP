@@ -1,0 +1,4 @@
+<?php
+namespace App\Models;
+use Illuminate\Database\Eloquent\Model;
+class Payment extends Model { protected $fillable=['business_id','customer_id','payment_date','amount','payment_method','reference','notes','receipt_number','status','recorded_by_user_id','voided_by_user_id','void_reason','voided_at']; protected function casts(): array{return ['payment_date'=>'date','amount'=>'decimal:2','voided_at'=>'datetime'];} public function business(){return $this->belongsTo(Business::class);} public function customer(){return $this->belongsTo(Customer::class);} public function allocations(){return $this->hasMany(PaymentAllocation::class);} public function recordedBy(){return $this->belongsTo(User::class,'recorded_by_user_id');} public function voidedBy(){return $this->belongsTo(User::class,'voided_by_user_id');} public function audits(){return $this->hasMany(PaymentAudit::class);} }

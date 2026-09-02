@@ -1,5 +1,5 @@
 export const defaultThemeValues = {
-  name: "BusinessHub Professional",
+  name: "Ovixa Professional",
 
   primaryColor: "#103746",
   secondaryColor: "#18566E",

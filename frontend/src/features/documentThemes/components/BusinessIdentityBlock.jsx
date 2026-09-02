@@ -96,11 +96,10 @@ export default function BusinessIdentityBlock({
               : "min-w-0"
           }
         >
-          {branding.showBusinessName && (
-            <h2 className="text-xl font-bold text-current">
-              {business.name || "Business Name"}
-            </h2>
-          )}
+          {/* Always show business name on invoices/quotations */}
+          <h2 className="text-xl font-bold text-current">
+            {business.name || "Business Name"}
+          </h2>
 
           {branding.showBusinessTagline && (
             <p className="mt-1 text-sm opacity-80">

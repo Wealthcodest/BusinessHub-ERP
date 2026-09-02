@@ -1,0 +1,2 @@
+<?php
+namespace App\Http\Resources; use Illuminate\Http\Resources\Json\JsonResource; class DocumentItemResource extends JsonResource{public function toArray($r):array{return ['id'=>(string)$this->id,'productId'=>$this->product_id?(string)$this->product_id:null,'description'=>$this->description,'unit'=>$this->unit,'quantity'=>(float)$this->quantity,'unitPrice'=>(float)$this->unit_price,'lineTotal'=>(float)$this->line_total];}}

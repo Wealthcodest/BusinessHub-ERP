@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Button, Modal, ModalBody, ModalFooter } from "@/components/ui";
 
 const methods = ["Bank Transfer", "Cash", "Card", "POS", "Cheque", "Other"];
-export default function RecordPaymentModal({ open, invoices, customers, businesses, initialInvoiceId, onClose, onSubmit, saving }) {
+export default function RecordPaymentModal({ open, invoices = [], customers = [], businesses = [], initialInvoiceId, onClose = () => {}, onSubmit, saving }) {
   const [invoiceId, setInvoiceId] = useState(initialInvoiceId || ""); const [values, setValues] = useState({ paymentDate: new Date().toISOString().slice(0, 10), amount: "", paymentMethod: "Bank Transfer", reference: "", notes: "", receivedBy: "Administrator" }); const [error, setError] = useState("");
   useEffect(() => { if (open) { setInvoiceId(initialInvoiceId || ""); setValues((current) => ({ ...current, amount: "" })); setError(""); } }, [open, initialInvoiceId]);
   const invoice = useMemo(() => invoices.find((item) => String(item.id) === String(invoiceId)), [invoices, invoiceId]); const customer = customers.find((item) => String(item.id) === String(invoice?.customerId)); const business = businesses.find((item) => String(item.id) === String(invoice?.businessId)); const money = (value) => new Intl.NumberFormat("en-NG", { style: "currency", currency: invoice?.currency || business?.currency || "NGN" }).format(Number(value || 0));

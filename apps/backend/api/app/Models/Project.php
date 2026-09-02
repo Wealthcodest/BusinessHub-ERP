@@ -1,0 +1,4 @@
+<?php
+namespace App\Models;
+use Illuminate\Database\Eloquent\Model;
+class Project extends Model { protected $fillable=['business_id','customer_id','project_number','name','description','status','start_date','expected_end_date','completed_at']; protected function casts(): array{return ['start_date'=>'date','expected_end_date'=>'date','completed_at'=>'datetime'];} public function business(){return $this->belongsTo(Business::class);} public function customer(){return $this->belongsTo(Customer::class);} public function quotations(){return $this->hasMany(Quotation::class);} public function invoices(){return $this->hasMany(Invoice::class);} public function paymentAllocations(){return $this->hasMany(PaymentAllocation::class);} public function expenses(){return $this->hasMany(Expense::class);} }

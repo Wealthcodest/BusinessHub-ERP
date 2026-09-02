@@ -315,6 +315,19 @@ export default function DocumentPreview({
             >
               {number}
             </p>
+
+            {(customer.companyName || customer.displayName) && (
+              <p
+                style={{
+                  color: headerTextColor,
+                  opacity: 0.85,
+                  marginTop: "0.5rem",
+                  fontSize: "0.875rem",
+                }}
+              >
+                For: {customer.companyName || customer.displayName}
+              </p>
+            )}
           </div>
         </header>
       );
@@ -337,9 +350,22 @@ if (section === "customer") {
         </p>
 
         {theme.customer?.showName !== false && (
-          <b>
-            {customer.displayName || "Customer"}
-          </b>
+          <div>
+            <b>
+              {customer.companyName || customer.displayName || "Customer"}
+            </b>
+            {customer.companyName && customer.displayName && customer.companyName !== customer.displayName && (
+              <p
+                style={{
+                  color: "var(--document-muted)",
+                  fontSize: "0.875rem",
+                  marginTop: "0.25rem",
+                }}
+              >
+                {customer.displayName}
+              </p>
+            )}
+          </div>
         )}
 
         {theme.customer?.showEmail !== false &&

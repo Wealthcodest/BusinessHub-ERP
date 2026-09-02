@@ -1,47 +1,7 @@
-import { Bell, Search, UserCircle2 } from "lucide-react";
+﻿import { Bell, Building2, Menu, Search, UserCircle2 } from "lucide-react";
+import { useActiveBusiness } from "@/app/ActiveBusinessContext";
 
 export default function Header() {
-  return (
-    <header className="bg-white h-20 border-b flex items-center justify-between px-8">
-
-      <div className="relative">
-
-        <Search
-          className="absolute left-3 top-3 text-gray-400"
-          size={18}
-        />
-
-        <input
-          placeholder="Search..."
-          className="pl-10 pr-4 py-2 w-80 rounded-lg border outline-none focus:ring-2 focus:ring-[#18566E]"
-        />
-
-      </div>
-
-      <div className="flex items-center gap-6">
-
-        <Bell />
-
-        <div className="flex items-center gap-3">
-
-          <UserCircle2 size={36} />
-
-          <div>
-
-            <p className="font-semibold">
-              Administrator
-            </p>
-
-            <p className="text-sm text-gray-500">
-              Super Admin
-            </p>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </header>
-  );
+  const { businesses, activeBusinessId, switchBusiness } = useActiveBusiness();
+  return <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200/90 bg-white/95 px-4 backdrop-blur sm:px-6 lg:px-8"><button type="button" aria-label="Open navigation" className="mr-3 rounded-md p-2 text-slate-600 hover:bg-slate-100 lg:hidden"><Menu className="h-5 w-5" /></button><label className="relative hidden w-full max-w-sm md:block"><span className="sr-only">Search workspace</span><Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" /><input placeholder="Search records…" className="h-9 w-full rounded-md border border-slate-200 bg-slate-50/70 py-2 pl-9 pr-3 text-sm text-slate-700 placeholder:text-slate-400" /></label><div className="ml-auto flex items-center gap-2 sm:gap-3"><label className="flex h-9 max-w-48 items-center gap-2 rounded-md border border-slate-200 bg-white px-2.5 text-sm"><Building2 className="h-4 w-4 shrink-0 text-[#18566E]" /><span className="sr-only">Active business</span><select value={activeBusinessId} onChange={(event) => switchBusiness(event.target.value)} className="min-w-0 bg-transparent text-sm font-medium text-slate-700">{!businesses.length && <option value="">No business</option>}{businesses.map((business) => <option key={business.id} value={business.id}>{business.name}{business.status === "inactive" ? " (inactive)" : ""}</option>)}</select></label><button type="button" aria-label="Notifications" className="rounded-md p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-800"><Bell className="h-5 w-5" /></button><div className="hidden items-center gap-2 border-l border-slate-200 pl-3 sm:flex"><UserCircle2 className="h-8 w-8 text-[#18566E]" /><div className="leading-tight"><p className="text-sm font-semibold text-slate-800">Administrator</p><p className="text-xs text-slate-500">Super Admin</p></div></div></div></header>;
 }

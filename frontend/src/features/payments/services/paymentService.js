@@ -50,4 +50,23 @@ export const paymentService = {
     await invoiceService.update(invoice.id, { ...invoice, amountPaid: totalPaid, status: nextStatus(invoice, totalPaid, balanceAfterPayment) });
     return updated;
   },
+  async delete(id) {
+    const payments = getPayments();
+    const payment = payments.find((p) => String(p.id) === String(id));
+    if (!payment) throw new Error("Payment record could not be found.");
+    const invoice = await invoiceService.getById(payment.invoiceId);
+    if (!invoice) {
+      // Legacy/sample payments may reference an invoice that was removed.
+      // Delete the orphaned payment without attempting an invoice recalculation.
+      savePayments(payments.filter((p) => String(p.id) !== String(id)));
+      return;
+    }
+    const remainingPayments = payments.filter((p) => String(p.invoiceId) === String(payment.invoiceId) && String(p.id) !== String(id));
+    const otherRecorded = remainingPayments.reduce((total, p) => total + amount(p.amount), 0);
+    const legacyPaid = Math.max(0, amount(invoice.amountPaid) - amount(payment.amount) - otherRecorded);
+    const totalPaid = legacyPaid + otherRecorded;
+    const balanceAfterPayment = Math.max(0, amount(invoice.grandTotal) - totalPaid);
+    savePayments(payments.filter((p) => String(p.id) !== String(id)));
+    await invoiceService.update(invoice.id, { ...invoice, amountPaid: totalPaid, status: nextStatus(invoice, totalPaid, balanceAfterPayment) });
+  },
 };

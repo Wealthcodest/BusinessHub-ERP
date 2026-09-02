@@ -18,6 +18,7 @@ export const normalizeTheme = (theme = {}) => {
   for (const sectionId of defaultSectionOrder) sections[sectionId] = { visible: sections[sectionId]?.visible !== false, ...(sections[sectionId] || {}) };
   return { ...safeTheme, primaryColor: colors.primary, secondaryColor: colors.secondary, accentColor: colors.accent, fontFamily: typography.bodyFont, headingFont: typography.headingFont, bodyFont: typography.bodyFont, colors, typography, branding: getThemeBranding(safeTheme), layout: { ...layout, sectionOrder, sections }, table: nested("table", safeTheme), session: nested("session", safeTheme), totals: nested("totals", safeTheme), payment: nested("payment", safeTheme), footer: nested("footer", safeTheme), isDefault: Boolean(safeTheme.isDefault), watermarkOpacity: Number(safeTheme.watermarkOpacity ?? 0.12) };
 };
-export const themeLabel = (theme) => theme?.name || "BusinessHub Professional";
+export const themeLabel = (theme) => theme?.name || "Ovixa Professional";
 export const getSectionOrder = (theme = {}) => { const order = Array.isArray(theme?.layout?.sectionOrder) ? theme.layout.sectionOrder : []; const sanitized = order.filter((id) => typeof id === "string" && (defaultSectionOrder.includes(id) || !defaultSectionOrder.length)); return sanitized.length ? sanitized : [...defaultSectionOrder]; };
 export const getSectionVisibility = (theme = {}) => { const provided = theme?.layout?.sections || {}; const base = { ...defaultSectionVisibility, ...defaultThemeValues.layout.sections, ...toVisibilityMap(provided) }; for (const sectionId of Object.keys(base)) base[sectionId] = { visible: base[sectionId]?.visible !== false, ...(base[sectionId] || {}) }; return base; };
+

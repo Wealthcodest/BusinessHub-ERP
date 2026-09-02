@@ -1,1 +1,1 @@
-export default function Textarea(props){return <textarea className="w-full rounded-lg border px-3 py-2" {...props}/>}
+﻿export default function Textarea({ className = "", ...props }) { return <textarea className={`min-h-24 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 disabled:cursor-not-allowed disabled:bg-slate-50 ${className}`} {...props} />; }

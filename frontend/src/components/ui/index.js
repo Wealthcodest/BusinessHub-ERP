@@ -1,4 +1,4 @@
-export { default as Button } from "./Button";
+﻿export { default as Button } from "./Button";
 export { default as Card } from "./Card";
 export { default as Badge } from "./Badge";
 export { default as Input } from "./Input";
@@ -32,3 +32,6 @@ export { Avatar, AvatarGroup } from "./Avatar";
 export { SearchInput } from "./SearchInput";
 export { QuickAction } from "./QuickAction";
 export { ActivityList, ActivityItem } from "./ActivityList";
+
+export { default as DocumentActions } from "@/components/documents/DocumentActions";
+

@@ -25,12 +25,16 @@ import { PaymentsPage } from "@/features/payments";
 import ReceiptPage from "@/features/payments/pages/ReceiptPage";
 import PaymentEditPage from "@/features/payments/pages/PaymentEditPage";
 import { ProjectExpensesPage } from "@/features/expenses";
-import { ProjectDetailsPage } from "@/features/projects";
+import { ProjectDetailsPage, ProjectsPage } from "@/features/projects";
+import UserManagementPage from "@/features/users/pages/UserManagementPage";
+import LoginPage from "@/features/auth/pages/LoginPage";
 
 export default function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
+
+        <Route path="login" element={<LoginPage />} />
 
         {/* ALL pages that should have the Sidebar/Header go inside this Route */}
 
@@ -73,7 +77,8 @@ export default function AppRoutes() {
           <Route path="payments/:id/receipt" element={<ReceiptPage />} />
           <Route path="payments/:id/edit" element={<PaymentEditPage />} />
           <Route path="project-expenses" element={<ProjectExpensesPage />} />
-          <Route path="projects/:id" element={<ProjectDetailsPage />} />
+          <Route path="projects" element={<ProjectsPage />} />
+          <Route path="projects/:id" element={<ProjectDetailsPage />} />`n          <Route path="users" element={<UserManagementPage />} />
           <Route path="quotations/:id/invoice" element={<InvoiceFromQuotationPage />} />
           {/* Temporary Test Route */}
           <Route path="test-modal" element={<TestModal />} />
@@ -83,3 +88,6 @@ export default function AppRoutes() {
     </BrowserRouter>
   );
 }
+
+
+

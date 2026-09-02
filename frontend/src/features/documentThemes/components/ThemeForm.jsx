@@ -320,7 +320,7 @@ export default function ThemeForm({
 
       header: {
         ...defaultThemeValues.header,
-        ...(preset.header || {}),
+        ...(preset.header || {}), 
       },
 
       watermark: {

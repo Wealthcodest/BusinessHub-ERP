@@ -1,0 +1,4 @@
+<?php
+namespace App\Models;
+use Illuminate\Database\Eloquent\Model;
+class Expense extends Model { protected $fillable=['business_id','customer_id','project_id','expense_date','category','description','amount','vendor','payment_method','reference','notes','created_by_user_id']; protected function casts(): array{return ['expense_date'=>'date','amount'=>'decimal:2'];} public function business(){return $this->belongsTo(Business::class);} public function customer(){return $this->belongsTo(Customer::class);} public function project(){return $this->belongsTo(Project::class);} public function createdBy(){return $this->belongsTo(User::class,'created_by_user_id');} }
